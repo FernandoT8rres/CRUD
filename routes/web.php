@@ -1,31 +1,20 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\GenderController;
-use App\Http\Controllers\UniverseController;
-use App\Http\Controllers\SuperheroController;
-use App\Models\Superhero;
 
 Route::get('/', function () {
-    $superheroes = Superhero::all(); // Obtén los datos
-    return view('Superheroes.index', compact('superheroes')); // Pasa la variable a la vista
+    return view('welcome');
 });
 
-Route::delete('/gender/{id}', [GenderController::class, 'destroy'])->name('gender.destroy');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-Route::get('/gender', [GenderController::class, 'index'])->name('gender.index');
-Route::get('/gender/create', [GenderController::class, 'create'])->name('gender.create');
-Route::post('/gender', [GenderController::class, 'store'])->name('gender.store');
-Route::get('/gender/{id}/edit', [GenderController::class, 'edit'])->name('gender.edit');
-Route::get('/gender/{id}', [GenderController::class, 'show'])->name('gender.show');
-
-
-
-Route::resource('/universes', UniverseController::class);
-Route::resource('/superheroes', SuperheroController::class);
-Route::resource('gender', GenderController::class);
-
-
-
-//Route::get('/universes',[UniverseController::class,'index']);
+require __DIR__.'/auth.php';
