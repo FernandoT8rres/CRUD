@@ -1,59 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Superheroes table</title>
-</head>
-<body>
-    <h1>Superheroes</h1>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Lista de Superhéroes') }}
+        </h2>
+    </x-slot>
 
-    <hr> 
-        <a href="{{ route('superheroes.create') }}">Create Superheroes</a>
-        <a href="{{ route('gender.create') }}" class="btn btn-primary">Create gender</a>
-        <a href="{{ route('gender.index') }}" class="btn btn-primary">Edit gender</a>
-        <a href="{{ route('universes.index') }}" class="btn btn-primary">Edit universes</a>
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="flex justify-between mb-4">
+                <a href="{{ route('superheroes.create') }}"
+                   class="inline-block px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-600">
+                    Crear Superhéroe
+                </a>
+                <a href="{{ route('universes.create') }}"
+                   class="inline-block px-4 py-2 bg-green-500 text-black rounded hover:bg-green-600">
+                    Crear Universo
+                </a>
+                <a href="{{ route('genders.create') }}"
+   class="inline-block px-4 py-2 bg-green-500 text-black rounded hover:bg-green-600">
+    Crear Género
+</a>
+            </div>
 
-    <hr> 
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <table class="min-w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-700">
+                            <th class="px-4 py-2">ID</th>
+                            <th class="px-4 py-2">Nombre</th>
+                            <th class="px-4 py-2">Poder</th>
+                            <th class="px-4 py-2">Universo</th>
+                            <th class="px-4 py-2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($superheroes as $superhero)
+                            <tr class="border-b">
+                                <td class="px-4 py-2">{{ $superhero->id }}</td>
+                                <td class="px-4 py-2">{{ $superhero->name }}</td>
+                                <td class="px-4 py-2">{{ $superhero->power }}</td>
+                                <td class="px-4 py-2">{{ $superhero->universe?->name ?? 'Sin universo' }}</td>
+                                <td class="px-4 py-2 space-x-2">
+                                    <a href="{{ route('superheroes.edit', $superhero) }}"
+                                       class="px-2 py-1 bg-yellow-400 text-black rounded hover:bg-yellow-500">
+                                        Editar
+                                    </a>
+                                    <form action="{{ route('superheroes.destroy', $superhero) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                                class="px-2 py-1 bg-red-500 text-black rounded hover:bg-red-600"
+                                                onclick="return confirm('¿Estás seguro de eliminar este superhéroe?')">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>universe_id</th>
-                <th>gender_id</th>
-                <th>Name</th>
-                <th>Real Name</th>
-                <th>picture</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach($superheroes as $item)
-            <tr>
-                <td>{{$item->id}}</td>
-                <td>{{$item->universe_id}}</td>
-                <td>{{$item->gender_id}}</td>
-                <td>{{$item->name}}</td>
-                <td>{{$item->real_name}}</td>
-                <td><img src="{{$item->picture}}" alt="{{$item->name}}" width="100"></td>
-                <td>
-                    <a href="{{ route('gender.edit', $item->gender_id) }}" class="btn btn-warning">Edit</a>
-                    <a href="{{ route('gender.show', $item->gender_id) }}" class="btn btn-info">Show</a>
-                    <br>
-                    <form action="{{ route('superheroes.destroy', $item->id) }}" method="post">
-                        @csrf
-                        @method('delete')
-                        <input type="submit" value="Delete" onclick="return confirm('Are you pretty sure? There is no way back')">
-                    <form>
-                </td>
-
-            </tr>
-
-            @endforeach
-            
-        </tbody>
-    </table>
-
-</body>
-</html>
+                @if($superheroes->isEmpty())
+                    <p class="p-4 text-center text-gray-500">No hay superhéroes registrados.</p>
+                @endif
+            </div>
+        </div>
+    </div>
+</x-app-layout>

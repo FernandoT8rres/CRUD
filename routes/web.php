@@ -18,3 +18,23 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+use App\Http\Controllers\SuperheroController;
+
+Route::resource('superheroes', SuperheroController::class);
+
+use App\Http\Controllers\UniverseController;
+
+// Route to show the form for creating a new universe
+Route::get('/universes/create', [UniverseController::class, 'create'])->name('universes.create');
+
+// Route to store the new universe
+Route::post('/universes', [UniverseController::class, 'store'])->name('universes.store');
+
+// Optionally, you might want to list all universes
+Route::get('/universes', [UniverseController::class, 'index'])->name('universes.index');
+
+Route::resource('universes', UniverseController::class);
+use App\Http\Controllers\GenderController;
+
+Route::resource('genders', GenderController::class);

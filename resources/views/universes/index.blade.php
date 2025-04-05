@@ -39,7 +39,7 @@
 
                 <td>
 
-                <a href = "{{route ('universes.show',$item->id)}}">Show</a>
+                <a href="{{ route('universes.show', $item->id) }}">Show</a>
 
                 <a href = "{{route ('universes.edit',$item->id)}}">Edit</a>
 

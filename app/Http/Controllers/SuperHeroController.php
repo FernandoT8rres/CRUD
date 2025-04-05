@@ -25,9 +25,9 @@ class SuperheroController extends Controller
      */
     public function create()
     {
-       $genders = Gender::select('id', 'name')->get();
-       $universes = Universe::select('id','name')->get();
-       return view('superheroes.create',compact('genders', 'universes')); //
+        $genders = Gender::select('id', 'name')->get(); // Obtén todos los géneros
+        $universes = Universe::all(); // Obtén todos los universos
+        return view('superheroes.create', compact('genders', 'universes')); // Pasa los géneros y universos a la vista
     }
 
     /**
@@ -35,18 +35,25 @@ class SuperheroController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'gender_id' => 'required|exists:genders,id',
+            'real_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'universe_id' => 'required|exists:universes,id',
+            'picture' => 'nullable|string|max:255',
+        ]);
+    
         Superhero::create([
-
             'gender_id' => $request->gender_id,
-            'real_name' => $request ->real_name,
-            'universe_id' => 1,
-            'name' => $request ->name,
+            'real_name' => $request->real_name,
+            'universe_id' => $request->universe_id,
+            'name' => $request->name,
             'picture' => $request->picture,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
-
-        return to_route ('superheroes.index');
+    
+        return to_route('superheroes.index');
     }
 
     /**
@@ -61,13 +68,12 @@ class SuperheroController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        $superhero = Superhero::findorfail($id);
-        $genders = Gender::select('id', 'name')->get();
-        $universes = Universe::select('id','name')->get();
-        return view('superheroes.edit', compact('superhero'));
-
+        $superhero = Superhero::findOrFail($id); // Obtén el superhéroe por ID
+        $universes = Universe::all(); // Obtén todos los universos
+    
+        return view('superheroes.edit', compact('superhero', 'universes')); // Pasa las variables a la vista
     }
 
     /**
@@ -75,18 +81,26 @@ class SuperheroController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //dd($request);
-        $superhero = Superhero::find($id);
+        $request->validate([
+            'real_name' => 'required|string|max:255', // Asegúrate de que este campo esté validado
+            'gender_id' => 'required|exists:genders,id', // Asegúrate de que este campo también esté en el formulario
+            'universe_id' => 'required|exists:universes,id', // Asegúrate de que este campo también esté en el formulario
+            'name' => 'required|string|max:255',
+            'picture' => 'nullable|url', // O cualquier otra validación que necesites
+        ]);
+    
+        $superhero = Superhero::findOrFail($id); // Asegúrate de que el superhéroe existe
+    
         $superhero->update([
             'gender_id' => $request->gender_id,
-            'real_name' => $request ->real_name,
-            'universe_id' => 1,
+            'real_name' => $request->real_name, // Asegúrate de que este campo esté presente
+            'universe_id' => $request->universe_id,
             'name' => $request->name,
-            'picture' => $request->picture,
-            'created_at' => Carbon::now(),
+            'picture' => $request->picture, // Asegúrate de que este campo también esté en el formulario
             'updated_at' => Carbon::now(),
         ]);
-        return to_route ('superheroes.index');
+    
+        return to_route('superheroes.index');
     }
 
     /**

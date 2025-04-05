@@ -6,47 +6,36 @@ use App\Models\Universe;
 
 class UniverseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $universes = Universe::all();
-        return view('universes.index',compact('universes'));
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('universes.create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Store a newly created universe in storage
     public function store(Request $request)
     {
-       Universe::create([
-        'name' => $request ->name,
-       ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
 
-       return to_route('universes.index');
+        Universe::create($request->all());
+
+        return redirect()->route('universes.index')->with('success', 'Universe created successfully.');
     }
 
+    // Optionally, you can add an index method to list universes
+    public function index()
+    {
+        $universes = Universe::all();
+        return view('universes.index', compact('universes'));
+    }
     /**
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-
+{
     $universe = Universe::findOrFail($id);
-    
     return view('universes.show', compact('universe'));
-
-    }
+}
 
     /**
      * Show the form for editing the specified resource.

@@ -13,12 +13,13 @@ class Superhero extends Model
     {
         return $this->belongsTo(Universe::class);
     }
-
+    
     public function gender()
     {
         return $this->belongsTo(Gender::class);
     }
     
+
     protected $table = "superheroes";
 
     protected $fillable = [
@@ -26,6 +27,7 @@ class Superhero extends Model
         'gender_id',
         'real_name',
         'universe_id',
+        'power',
         'name',
         'picture'
 
