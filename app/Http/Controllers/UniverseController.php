@@ -27,6 +27,7 @@ class UniverseController extends Controller
     {
         $universes = Universe::all();
         return view('universes.index', compact('universes'));
+        return response()->json(Superhero::all());
     }
     /**
      * Display the specified resource.
@@ -35,6 +36,11 @@ class UniverseController extends Controller
 {
     $universe = Universe::findOrFail($id);
     return view('universes.show', compact('universe'));
+        $superhero = Superhero::find($id);
+        if (!$superhero) {
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+        return response()->json($superhero);
 }
 
     /**

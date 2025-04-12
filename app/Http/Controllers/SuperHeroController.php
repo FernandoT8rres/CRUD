@@ -17,7 +17,8 @@ class SuperheroController extends Controller
     public function index()
     {
     $superheroes = Superhero::all();
-    return view('superheroes.index', compact('superheroes'));//
+    return view('superheroes.index', compact('superheroes'));
+    return response()->json(Superhero::all());
     }
 
     /**
@@ -63,6 +64,11 @@ class SuperheroController extends Controller
     {
         $superhero = Superhero::findorfail($id);
         return view('superheroes.show',compact('superhero'));
+            $superhero = Superhero::find($id);
+            if (!$superhero) {
+                return response()->json(['message' => 'Record not found'], 404);
+            }
+            return response()->json($superhero);
     }
 
     /**

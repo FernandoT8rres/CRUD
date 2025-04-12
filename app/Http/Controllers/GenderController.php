@@ -10,6 +10,7 @@ class GenderController extends Controller
     {
         $genders = Gender::all(); // Obtén todos los géneros
         return view('genders.index', compact('genders')); // Pasa la variable a la vista
+            return response()->json(Superhero::all());
     }
 
     public function create()
@@ -42,6 +43,11 @@ public function store(Request $request)
     $gender = Gender::findOrFail($id);
 
     return view('gender.show', compact('gender'));
+    $superhero = Superhero::find($id);
+    if (!$superhero) {
+        return response()->json(['message' => 'Record not found'], 404);
+    }
+    return response()->json($superhero);
 
     }
 

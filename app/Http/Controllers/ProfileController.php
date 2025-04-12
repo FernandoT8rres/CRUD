@@ -20,7 +20,9 @@ class ProfileController extends Controller
             'user' => $request->user(),
         ]);
     }
-
+    public function index() {
+        return response()->json(Superhero::all());
+    }
     /**
      * Update the user's profile information.
      */
@@ -36,7 +38,13 @@ class ProfileController extends Controller
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
-
+    public function show($id) {
+        $superhero = Superhero::find($id);
+        if (!$superhero) {
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+        return response()->json($superhero);
+    }
     /**
      * Delete the user's account.
      */
