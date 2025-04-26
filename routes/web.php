@@ -38,3 +38,9 @@ Route::resource('universes', UniverseController::class);
 use App\Http\Controllers\GenderController;
 
 Route::resource('genders', GenderController::class);
+
+use App\Http\Controllers\FileController;
+
+Route::get('/upload', [FileController::class, 'showUploadForm'])->name('upload.form');
+Route::post('/upload', [FileController::class, 'uploadFile'])->name('upload.file');
+Route::get('/download/{filename}', [FileController::class, 'downloadFile'])->name('download.file');
